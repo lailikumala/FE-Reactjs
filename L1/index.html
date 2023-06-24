@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+  .wrap-btn {
+    display: flex;
+    flex-direction: row;
+  }
+</style>
+
+<body>
+  <form name="myForm" id="todoForm">
+    <input placeholder="masukkan tugas" id="todo" name="fname" required>
+    <button type="button" onclick="AddTodo()">Tambah</button>
+  </form>
+  <ul id="todoList"></ul>
+  <div id="total-uncheced"></div>
+  <div class="wrap-btn">
+    <button onclick="checklistAll()">Tandai semua selesai</button>
+    <button id="remove-all">Hapus Semua</button>
+  </div>
+</body>
+
+<script src="script.js"></script>
+</html>
