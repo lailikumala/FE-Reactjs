@@ -15,7 +15,7 @@ const ModalEdit = ({idClass, isShowModal, closeModal} : ParamsEdit) => {
           <div className="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
             
             <div className="w-11/12 p-5 overflow-scroll text-black bg-white rounded md:w-5/12 h-8/12 md:p-7">
-              <div className="text-2xl font-semibold mb-7">Edit Data Pelatihan</div>
+              <div className="text-2xl font-semibold mb-7">Edit Data Kelas</div>
               <form className="mb-5 text-start">
                 <div className="mb-4">
                   <select className="w-full bg-white select select-bordered">

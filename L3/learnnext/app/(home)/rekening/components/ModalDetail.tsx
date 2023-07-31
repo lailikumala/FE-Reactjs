@@ -15,25 +15,21 @@ const ModalDetail = ({idClass, isShowModal, closeModal} : ParamsDetail) => {
           <div className="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
             
             <div className="w-11/12 p-5 overflow-scroll text-black bg-white rounded md:w-5/12 min-h-8/12 md:p-7">
-              <div className="text-2xl font-semibold mb-7">Detail Kelas</div>
+              <div className="text-2xl font-semibold mb-7">Detail Rekening</div>
               <div className="mb-5">
                 <div className="grid grid-cols-3 gap-4 text-start">
                   <div>
                     <ul className="list-none">
                       <li>Nama Pegawai</li>
-                      <li>NIK Pegawai</li>
-                      <li>Nama Pelatihan</li>
-                      <li>Nama Pengajar</li>
-                      <li>Tanggal Kelas</li>
+                      <li>Nama Bank</li>
+                      <li>No. Rekening</li>
                     </ul>
                   </div>
                   <div className="col-span-2">
                     <ul className="list-none">
                       <li>: Cy Ganderton</li>
-                      <li>: 124239</li>
-                      <li>: Javascript</li>
-                      <li>: Brodi</li>
-                      <li>: 20 Juli 2023</li>
+                      <li>: BCA</li>
+                      <li>: 0876546</li>
                     </ul>
                   </div>
                 </div>

@@ -31,7 +31,7 @@ const ModalDetail = ({idEmployee, isShowModal, closeModal} : ParamsDetail) => {
                   <div className="col-span-2">
                     <ul className="list-none">
                       <li>: Ganderton</li>
-                      <li>: 12567281</li>
+                      <li>: 124239</li>
                       <li>: 12918738</li>
                       <li>: 25 Feb 2019</li>
                       <li>: Jakarta</li>

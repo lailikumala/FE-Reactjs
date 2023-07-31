@@ -46,6 +46,9 @@ const Navbar = () => {
           <li>
             <Link href={"/class"} className={pathname == "/class" ? "border-b-2 rounded-none border-white" : "text-white"}>Kelas</Link>
           </li>
+          <li>
+            <Link href={"/rekening"} className={pathname == "/rekening" ? "border-b-2 rounded-none border-white" : "text-white"}>Rekening</Link>
+          </li>
         </ul>
       </div>
       <div className="navbar-end">

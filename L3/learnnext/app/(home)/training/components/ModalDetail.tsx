@@ -28,7 +28,7 @@ const ModalDetail = ({ idTraining, isShowModal, closeModal } : ParamsDetail ) =>
                 <div className="col-span-2">
                   <ul className="list-none">
                     <li>: Javascript</li>
-                    <li>: Brodi</li>
+                    <li>: Masbro</li>
                   </ul>
                 </div>
               </div>
