@@ -31,6 +31,9 @@ const Navbar = () => {
             <li>
               <Link href="/class">Kelas <span className={pathname == "/class" ? "ms-3 w-2 h-2 rounded-full bg-white" : ""}></span></Link>
             </li>
+            <li>
+              <Link href="/rekening">Rekening <span className={pathname == "/rekening" ? "ms-3 w-2 h-2 rounded-full bg-white" : ""}></span></Link>
+            </li>
           </ul>
         </div>
         <a className="text-xl text-white normal-case btn btn-ghost">SMPEGAWAI</a>

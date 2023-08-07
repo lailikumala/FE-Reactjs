@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MdEdit, MdDelete, MdRemoveRedEye } from "react-icons/md"
 import { ModalAdd, ModalDelete, ModalDetail, ModalEdit } from "./components"
+import { AppDispatch, RootState } from "../../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployee } from "../../../store/api/employee";
 
 const EmployeePage = () => {
 
@@ -10,6 +13,19 @@ const EmployeePage = () => {
   const [showModalAdd, setShowModalAdd] = useState(false)
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [showModalDelete, setShowModalDelete] = useState(false)
+  const [selected, setselected] = useState<any>()
+  const { dataEmployee } = useSelector(
+    (state: RootState) => state.employee
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const data =  dispatch(fetchEmployee());
+    return () => {
+      data
+    };
+  }, []);
 
   return (
     <section className="text-black">
@@ -36,35 +52,51 @@ const EmployeePage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="hover:bg-primary-color hover:text-white">
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>124239</td>
-              <td>Jakarta</td>
-              <td>Active</td>
-              <td>
-                <div className="hover:cursor-pointer" onClick={() => setShowModalDetail(true)}>
-                  <MdRemoveRedEye />
-                </div>
+            {dataEmployee?.content?.length ? dataEmployee.content.map((value: any,  index: number) => (
+              <tr key={index} className="hover:bg-primary-color hover:text-white">
+                <th>{index+1}</th>
+                <td>{value.name}</td>
+                <td>{value.karyawanDetail.nik}</td>
+                <td>{value.address}</td>
+                <td>{value.status}</td>
+                <td>
+                  <div className="hover:cursor-pointer" onClick={() => {
+                    setShowModalDetail(true)
+                    setselected(value)
+                  }}>
+                    <MdRemoveRedEye />
+                  </div>
+                  
+                </td>
+                <td>
+                  <div className="hover:cursor-pointer" onClick={() => {
+                    setShowModalEdit(true)
+                    setselected(value)
+                  }}>
+                    <MdEdit/>
+                  </div>
+                </td>
+                <td>
+                  <div className="hover:cursor-pointer" onClick={() => {
+                    setShowModalDelete(true)
+                    setselected(value)
+                  }}>
+                    <MdDelete />
+                  </div>
+                </td>
+              </tr>
+            )): (<tr>
+              <td colSpan={7} align="center">
+                Data Karyawan Tidak Ada
               </td>
-              <td>
-                <div className="hover:cursor-pointer" onClick={() => setShowModalEdit(true)}>
-                  <MdEdit/>
-                </div>
-              </td>
-              <td>
-                <div className="hover:cursor-pointer" onClick={() => setShowModalDelete(true)}>
-                  <MdDelete />
-                </div>
-              </td>
-            </tr>
+            </tr>)}
           </tbody>
         </table>
       </div>
       </div>
 
       <ModalDetail
-        idEmployee="122"
+        idEmployee={selected?.id}
         isShowModal={showModalDetail}
         closeModal={() => setShowModalDetail(false)}
       />
@@ -75,14 +107,14 @@ const EmployeePage = () => {
       />
 
       <ModalEdit
-        idEmployee="123"
+        id={selected?.id}
         isShowModal={showModalEdit}
         closeModal={() => setShowModalEdit(false)}
       />
 
       <ModalDelete
-        idEmployee="123"
-        nameEmployee="Ganderton"
+        idEmployee={selected?.id}
+        nameEmployee={selected?.name}
         isShowModal={showModalDelete}
         closeModal={() => setShowModalDelete(false)}
       />

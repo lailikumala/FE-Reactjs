@@ -1,5 +1,8 @@
 'use client'
 import { CgDanger } from "react-icons/cg"
+import { AppDispatch } from "@/store"
+import { deleteTraining, fetchTraining } from "@/store/api/training"
+import { useDispatch } from "react-redux"
 
 type ParamsDelete = {
   idTraining: string;
@@ -8,7 +11,18 @@ type ParamsDelete = {
   closeModal: () => void;
 }
 
+
+
 const ModalDelete = ({idTraining, trainingName, isShowModal, closeModal} : ParamsDelete) => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const deleteData = async () => {
+    await dispatch(deleteTraining({id: idTraining}))
+    await dispatch(fetchTraining())
+    closeModal()
+  }
+
   return (
     <section className={isShowModal ? "ralative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
@@ -27,7 +41,7 @@ const ModalDelete = ({idTraining, trainingName, isShowModal, closeModal} : Param
             </form>
             <div className="flex justify-center">
               <div className="btn btn-sm me-2" onClick={closeModal}>Batal</div>
-              <div className="text-white btn btn-sm btn-error" onClick={closeModal}>Hapus</div>
+              <div className="text-white btn btn-sm btn-error" onClick={deleteData}>Hapus</div>
             </div>
           </div>
 

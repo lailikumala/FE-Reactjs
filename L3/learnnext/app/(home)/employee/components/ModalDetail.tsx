@@ -1,12 +1,31 @@
 'use client'
 
+import { AppDispatch, RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import {useEffect} from 'react'
+import { fetchEmployeeById } from "@/store/api/employee";
+
 type ParamsDetail = {
-  idEmployee: String,
+  idEmployee: any,
   isShowModal: boolean,
   closeModal: () => void
 }
 
 const ModalDetail = ({idEmployee, isShowModal, closeModal} : ParamsDetail) => {
+
+  const { dataEmployeeId } = useSelector(
+    (state: RootState) => state.employee
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+
+    if(idEmployee) {
+      dispatch(fetchEmployeeById({id: idEmployee}));
+    }
+    
+  }, [idEmployee]);
   
   return (
     <section className={isShowModal ? "relative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -23,19 +42,19 @@ const ModalDetail = ({idEmployee, isShowModal, closeModal} : ParamsDetail) => {
                       <li>Nama</li>
                       <li>NIK</li>
                       <li>NPWP</li>
-                      <li>Tanggal Lahir</li>
+                      <li>Tgl Lahir</li>
                       <li>Alamat</li>
                       <li>Status</li>
                     </ul>
                   </div>
                   <div className="col-span-2">
                     <ul className="list-none">
-                      <li>: Ganderton</li>
-                      <li>: 124239</li>
-                      <li>: 12918738</li>
-                      <li>: 25 Feb 2019</li>
-                      <li>: Jakarta</li>
-                      <li>: Aktif</li>
+                      <li>: {dataEmployeeId?.name}</li>
+                      <li>: {dataEmployeeId?.karyawanDetail?.nik}</li>
+                      <li>: {dataEmployeeId?.karyawanDetail?.npwp}</li>
+                      <li>: {dataEmployeeId?.dob?.slice(0,10)}</li>
+                      <li>: {dataEmployeeId?.address}</li>
+                      <li>: {dataEmployeeId?.status}</li>
                     </ul>
                   </div>
                 </div>

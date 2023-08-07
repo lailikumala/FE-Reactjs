@@ -1,14 +1,31 @@
 'use client'
 
+import { AppDispatch, RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import {useEffect} from 'react'
+import { fetchTrainingById } from "@/store/api/training";
+
 type ParamsDetail = {
   idTraining: string;
   isShowModal: boolean;
   closeModal: () => void;
 }
 
-import React from 'react'
 
 const ModalDetail = ({ idTraining, isShowModal, closeModal } : ParamsDetail ) => {
+
+  const { dataTrainingId } = useSelector(
+    (state: RootState) => state.training
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if(idTraining) {
+      dispatch(fetchTrainingById({id: idTraining}));
+    }
+    
+  }, [idTraining]);
+
   return (
     <section className={isShowModal ? "ralative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
@@ -27,8 +44,8 @@ const ModalDetail = ({ idTraining, isShowModal, closeModal } : ParamsDetail ) =>
                 </div>
                 <div className="col-span-2">
                   <ul className="list-none">
-                    <li>: Javascript</li>
-                    <li>: Masbro</li>
+                    <li>: {dataTrainingId?.tema}</li>
+                    <li>: {dataTrainingId?.pengajar}</li>
                   </ul>
                 </div>
               </div>

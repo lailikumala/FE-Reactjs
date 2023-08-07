@@ -1,14 +1,24 @@
 'use client'
+import { AppDispatch } from "@/store"
+import { deleteEmployee, fetchEmployee } from "@/store/api/employee"
 import { CgDanger } from "react-icons/cg"
+import { useDispatch } from "react-redux"
 
 type ParamsDelete = {
-  idEmployee: String,
+  idEmployee: any,
   nameEmployee: String,
   isShowModal: boolean,
   closeModal: () => void
 }
 
 const ModalDelete = ({isShowModal, idEmployee, nameEmployee, closeModal} :ParamsDelete) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const deleteData = async () => {
+    await dispatch(deleteEmployee({id: idEmployee}))
+    await dispatch(fetchEmployee())
+    closeModal()
+  }
   
   return (
     <section className={isShowModal ? "relative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -28,7 +38,7 @@ const ModalDelete = ({isShowModal, idEmployee, nameEmployee, closeModal} :Params
               </div>
               <div className="flex justify-center">
                 <div className="btn btn-sm me-2" onClick={closeModal}>Batal</div>
-                <div className="text-white btn btn-sm btn-error" onClick={closeModal}>Ya, Hapus</div>
+                <div className="text-white btn btn-sm btn-error" onClick={deleteData}>Ya, Hapus</div>
               </div>
             </div>
             

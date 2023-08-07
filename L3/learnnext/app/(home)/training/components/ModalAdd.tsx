@@ -1,11 +1,26 @@
 'use client'
+import { SubmitHandler, useForm } from "react-hook-form";
+import { AppDispatch } from "@/store";
+import { useDispatch } from "react-redux";
+import { addTraining, fetchTraining } from "@/store/api/training";
+import { AddFormTraining, ParamsAdd, validation } from "@/utilities";
 
-type ParamsAdd = {
-  isShowModal: boolean;
-  closeModal: () => void;
-}
+const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
 
-const ModalAdd = ({isShowModal, closeModal} : ParamsAdd) => {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<AddFormTraining>();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const formSubmit: SubmitHandler<AddFormTraining> = async (data) => {
+    const dataTraining =  {
+      tema: data.tema,
+      pengajar: data.pengajar
+    }
+    await dispatch(addTraining({field: dataTraining}))
+    await dispatch(fetchTraining())
+    await reset()
+    closeModal()
+  };
+
   return (
     <section className={isShowModal ? "ralative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
@@ -17,16 +32,18 @@ const ModalAdd = ({isShowModal, closeModal} : ParamsAdd) => {
             <form className="mb-5 text-start">
               <div className="mb-4">
                 <label className="block mb-1">Nama Pelatih</label>
-                <input type="text" id="name" className="w-full text-black rounded" />
+                <input type="text" id="name" className="w-full text-black rounded" {...register("tema", validation.addTraining.tema)} />
+                {errors.tema && <p className="text-sm text-red-500">{errors.tema?.message}</p>}
               </div>
               <div className="mb-4">
                 <label className="block mb-1">Pengajar</label>
-                <input type="text" id="teacher" className="w-full text-black rounded" />
+                <input type="text" id="teacher" className="w-full text-black rounded" {...register("pengajar", validation.addTraining.pengajar)}/>
+                {errors.pengajar && <p className="text-sm text-red-500">{errors.pengajar?.message}</p>}
               </div>
             </form>
             <div className="flex justify-end">
               <div className="btn btn-sm me-2" onClick={closeModal}>Batal</div>
-              <div className="text-white btn btn-sm bg-primary-color" onClick={closeModal}>Tambah</div>
+              <div className="text-white btn btn-sm bg-primary-color" onClick={handleSubmit(formSubmit)}>Tambah</div>
             </div>
           </div>
 
