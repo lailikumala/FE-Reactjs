@@ -11,7 +11,6 @@ type ParamsDetail = {
   closeModal: () => void;
 }
 
-
 const ModalDetail = ({ idTraining, isShowModal, closeModal } : ParamsDetail ) => {
 
   const { dataTrainingId } = useSelector(

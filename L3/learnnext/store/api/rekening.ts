@@ -3,12 +3,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
-export const fetchClass = createAsyncThunk(
-  "class/getList",
+export const fetchRekening = createAsyncThunk(
+  "rekening/getList",
   async () => {
     try {
       const response = await axios(
-        `${BASE_URL}/v1/karyawan-training/list?page=1&size=3`, {
+        `${BASE_URL}/v1/rekening/list?page=1&size=3`, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
@@ -23,13 +23,13 @@ export const fetchClass = createAsyncThunk(
   }
 );
 
-export const fetchClassById = createAsyncThunk(
-  "class/getById",
+export const fetchRekeningById = createAsyncThunk(
+  "rekening/getById",
   async ({id} : {id: any}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(
-          `${BASE_URL}/v1/karyawan-training/${id}`, {
+          `${BASE_URL}/v1/rekening/${id}`, {
             method: "GET",
             headers: {
               Authorization: "Bearer " + token,
@@ -45,12 +45,12 @@ export const fetchClassById = createAsyncThunk(
   }
 );
 
-export const updateClass = createAsyncThunk(
-  "class/update",
+export const updateRekening = createAsyncThunk(
+  "rekening/update",
   async ({field} : {field: any}, {rejectWithValue}) => {
     try {
       const response = await axios(
-        `${BASE_URL}/v1/karyawan-training/update`, {
+        `${BASE_URL}/v1/rekening/update`, {
           method: "PUT",
           headers: {
             'Content-Type': 'application/json',
@@ -67,12 +67,12 @@ export const updateClass = createAsyncThunk(
   }
 );
 
-export const addClass = createAsyncThunk(
-  "class/add",
+export const addRekening = createAsyncThunk(
+  "rekening/add",
   async ({field} : {field: any}, {rejectWithValue}) => {
     try {
       const response = await axios(
-        `${BASE_URL}/v1/karyawan-training/save`, {
+        `${BASE_URL}/v1/rekening/save`, {
           method: "POST",
           headers: {
             Authorization: "Bearer " + token,
@@ -89,13 +89,13 @@ export const addClass = createAsyncThunk(
   }
 );
 
-export const deleteClass = createAsyncThunk(
-  "class/delete",
+export const deleteRekening = createAsyncThunk(
+  "rekening/delete",
   async ({id} : {id: any}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(
-          `${BASE_URL}/v1/karyawan-training/delete/${id}`, {
+          `${BASE_URL}/v1/rekening/delete/${id}`, {
             method: "DELETE",
             headers: {
               Authorization: "Bearer " + token,

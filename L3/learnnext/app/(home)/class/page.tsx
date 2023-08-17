@@ -1,8 +1,11 @@
 'use client'
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { MdEdit, MdDelete, MdRemoveRedEye } from "react-icons/md"
 import { ModalAdd, ModalDelete, ModalDetail, ModalEdit } from './components'
+import { AppDispatch, RootState } from '@/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchClass } from '@/store/api/class'
 
 const ClassPage = () => {
 
@@ -10,6 +13,19 @@ const ClassPage = () => {
   const [showModalAdd, setShowModalAdd] = useState(false)
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [showModalDelete, setShowModalDelete] = useState(false)
+  const [selected, setselected] = useState<any>()
+  const { dataClass } = useSelector(
+    (state: RootState) => state.classTraining
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const data = dispatch(fetchClass());
+    return () => {
+      data
+    };
+  }, []);
 
   return (
     <section className="text-black">
@@ -35,32 +51,47 @@ const ClassPage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="hover:bg-primary-color hover:text-white">
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>124239</td>
-              <td>Javascript</td>
-              <td>
-                <div className="hover:cursor-pointer" onClick={() => setShowModalDetail(true)}>
-                  <MdRemoveRedEye />
-                </div>
+            {dataClass?.content?.length ? dataClass?.content.map((value: any, index: number) => (
+              <tr key={index} className="hover:bg-primary-color hover:text-white">
+                <th>{index+1}</th>
+                <td>{value?.karyawan?.name}</td>
+                <td>{value?.karyawan?.karyawanDetail?.nik}</td>
+                <td>{value?.training?.tema}</td>
+                <td>
+                  <div className="hover:cursor-pointer" onClick={() => {
+                    setShowModalDetail(true)
+                    setselected(value)
+                  }}>
+                    <MdRemoveRedEye />
+                  </div>
+                </td>
+                <td>
+                  <div className="hover:cursor-pointer" onClick={() => {
+                    setShowModalEdit(true)
+                    setselected(value)
+                  }}>
+                    <MdEdit/>
+                  </div>
+                </td>
+                <td>
+                  <MdDelete className="hover:cursor-pointer" onClick={() => {
+                    setShowModalDelete(true)
+                    setselected(value)
+                  }}/>
+                </td>
+              </tr>
+            )): (<tr>
+              <td colSpan={7} align="center">
+                Data Kelas Tidak Ada
               </td>
-              <td>
-                <div className="hover:cursor-pointer" onClick={() => setShowModalEdit(true)}>
-                  <MdEdit/>
-                </div>
-              </td>
-              <td>
-                <MdDelete className="hover:cursor-pointer" onClick={() => setShowModalDelete(true)}/>
-              </td>
-            </tr>
+            </tr>)}
           </tbody>
         </table>
       </div>
       </div>
 
       <ModalDetail
-        idClass="1"
+        idClass={selected?.id}
         isShowModal={showModalDetail}
         closeModal={() => setShowModalDetail(false)}
       />
@@ -71,13 +102,13 @@ const ClassPage = () => {
       />
 
       <ModalEdit
-        idClass="1"
+        id={selected?.id}
         isShowModal={showModalEdit}
         closeModal={() => setShowModalEdit(false)}
       />
 
       <ModalDelete
-        idClass="1"
+        idClass={selected?.id}
         isShowModal={showModalDelete}
         closeModal={() => setShowModalDelete(false)}
       />

@@ -11,8 +11,6 @@ type ParamsDelete = {
   closeModal: () => void;
 }
 
-
-
 const ModalDelete = ({idTraining, trainingName, isShowModal, closeModal} : ParamsDelete) => {
 
   const dispatch = useDispatch<AppDispatch>();

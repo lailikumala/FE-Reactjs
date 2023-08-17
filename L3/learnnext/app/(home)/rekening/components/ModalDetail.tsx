@@ -1,12 +1,31 @@
 'use client'
 
+import { AppDispatch, RootState } from "@/store";
+import { fetchRekeningById } from "@/store/api/rekening";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 type ParamsDetail = {
-  idClass: String,
+  id: String,
   isShowModal: boolean,
   closeModal: () => void
 }
 
-const ModalDetail = ({idClass, isShowModal, closeModal} : ParamsDetail) => {
+const ModalDetail = ({id, isShowModal, closeModal} : ParamsDetail) => {
+
+  const { dataRekeningId } = useSelector(
+    (state: RootState) => state.rekening
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+
+    if(id) {
+      dispatch(fetchRekeningById({id: id}));
+    }
+    
+  }, [id]);
   
   return (
     <section className={isShowModal ? "relative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -27,9 +46,9 @@ const ModalDetail = ({idClass, isShowModal, closeModal} : ParamsDetail) => {
                   </div>
                   <div className="col-span-2">
                     <ul className="list-none">
-                      <li>: Cy Ganderton</li>
-                      <li>: BCA</li>
-                      <li>: 0876546</li>
+                      <li>: {dataRekeningId?.nama}</li>
+                      <li>: {dataRekeningId?.jenis}</li>
+                      <li>: {dataRekeningId?.norek}</li>
                     </ul>
                   </div>
                 </div>

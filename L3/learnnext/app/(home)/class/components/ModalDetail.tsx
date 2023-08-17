@@ -1,5 +1,10 @@
 'use client'
 
+import { AppDispatch, RootState } from "@/store";
+import { fetchClassById } from "@/store/api/class";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 type ParamsDetail = {
   idClass: String,
   isShowModal: boolean,
@@ -7,6 +12,20 @@ type ParamsDetail = {
 }
 
 const ModalDetail = ({idClass, isShowModal, closeModal} : ParamsDetail) => {
+
+  const { dataClassId } = useSelector(
+    (state: RootState) => state.classTraining
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+
+    if(idClass) {
+      dispatch(fetchClassById({id: idClass}));
+    }
+    
+  }, [idClass]);
   
   return (
     <section className={isShowModal ? "relative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -29,11 +48,11 @@ const ModalDetail = ({idClass, isShowModal, closeModal} : ParamsDetail) => {
                   </div>
                   <div className="col-span-2">
                     <ul className="list-none">
-                      <li>: Cy Ganderton</li>
-                      <li>: 124239</li>
-                      <li>: Javascript</li>
-                      <li>: Brodi</li>
-                      <li>: 20 Juli 2023</li>
+                      <li>: {dataClassId?.karyawan?.name}</li>
+                      <li>: {dataClassId?.karyawan?.karyawanDetail?.nik}</li>
+                      <li>: {dataClassId?.training?.tema}</li>
+                      <li>: {dataClassId?.training?.pengajar}</li>
+                      <li>: {dataClassId?.training_date}</li>
                     </ul>
                   </div>
                 </div>

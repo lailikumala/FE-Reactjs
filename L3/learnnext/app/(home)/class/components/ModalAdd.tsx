@@ -1,43 +1,91 @@
 'use client'
 
-type ParamsAdd = {
-  isShowModal: boolean;
-  closeModal: () => void;
-}
+import { AppDispatch, RootState } from "@/store";
+import { addClass, fetchClass } from "@/store/api/class";
+import { fetchEmployee } from "@/store/api/employee";
+import { fetchTraining } from "@/store/api/training";
+import { AddFormClass, ParamsAdd, validation } from "@/utilities";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
-const ModalAdd = ({isShowModal, closeModal} : ParamsAdd) => {
+const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
+  const { dataTraining } = useSelector(
+    (state: RootState) => state.training
+  );
+  const { dataEmployee } = useSelector(
+    (state: RootState) => state.employee
+  );
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<AddFormClass>();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchEmployee())
+    dispatch(fetchTraining())
+  }, [])
+
+  const formSubmit: SubmitHandler<AddFormClass> = async (data) => {
+    const dataClass = {
+      karyawan: {
+        id: data.karyawan
+      },
+      training: {
+        id: data.training
+      },
+      training_date: data.training_date.concat(" ", data.training_time + ":00")
+    }
+    await dispatch(addClass({ field: dataClass }))
+    await dispatch(fetchClass())
+    await reset()
+    closeModal()
+  }
+
   return (
     <section className={isShowModal ? "relative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
-        <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
-            
-            <div className="w-11/12 p-5 overflow-scroll text-black bg-white rounded md:w-5/12 h-8/12 md:p-7">
-              <div className="text-2xl font-semibold mb-7">Tambah Data Kelas</div>
-              <form className="mb-5 text-start">
-                <div className="mb-4">
-                  <select className="w-full bg-white select select-bordered">
-                    <option>Pilih Pegawai:</option>
-                    <option>Brodi</option>
-                    <option>Greedo</option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <select className="w-full bg-white select select-bordered">
-                    <option>Pilih Pelatihan:</option>
-                    <option>Javascript</option>
-                    <option>Java Spring Boot</option>
-                  </select>
-                </div>
-              </form>
-              <div className="flex justify-end">
-                <div className="btn btn-sm me-2" onClick={closeModal}>Batal</div>
-                <div className="text-white btn btn-sm bg-primary-color" onClick={closeModal}>Tambah</div>
+      <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
+
+          <div className="w-11/12 p-5 overflow-scroll text-black bg-white rounded md:w-5/12 h-8/12 md:p-7">
+            <div className="text-2xl font-semibold mb-7">Tambah Data Kelas</div>
+            <form className="mb-5 text-start">
+              <div className="mb-4">
+                <select className="w-full bg-white select select-bordered" {...register("karyawan", validation.addClass.karyawan)}>
+                  <option value={""}>Pilih Pegawai:</option>
+                  {dataEmployee?.content?.map((value: any, index: number) => (
+                    <option key={index} value={value}>{value?.name}</option>
+                  ))}
+                </select>
+                {errors.karyawan && <p className="text-sm text-red-500">{errors.karyawan?.message}</p>}
               </div>
+              <div className="mb-4">
+                <select className="w-full bg-white select select-bordered" {...register("training", validation.addClass.training)}>
+                  <option value={""}>Pilih Pelatihan:</option>
+                  {dataTraining?.content?.map((value: any, index: number) => (
+                    <option key={index} value={value?.id}>{value?.tema}</option>
+                  ))}
+                </select>
+                {errors.training && <p className="text-sm text-red-500">{errors.training?.message}</p>}
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1">Tanggal Pelatihan</label>
+                <input type="date" className="w-full text-black rounded" id="training_date" {...register("training_date", validation.addClass.training_date)} />
+                {errors.training_date && <p className="text-sm text-red-500">{errors.training_date?.message}</p>}
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1">Jam Pelatihan</label>
+                <input type="time" className="w-full text-black rounded" id="appt" {...register("training_time", validation.addClass.training_time)} />
+                {errors.training_time && <p className="text-sm text-red-500">{errors.training_time?.message}</p>}
+              </div>
+            </form>
+            <div className="flex justify-end">
+              <div className="btn btn-sm me-2" onClick={closeModal}>Batal</div>
+              <div className="text-white btn btn-sm bg-primary-color" onClick={handleSubmit(formSubmit)}>Tambah</div>
             </div>
-            
           </div>
+
         </div>
+      </div>
     </section>
   )
 }

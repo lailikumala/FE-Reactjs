@@ -2,7 +2,7 @@
 
 import { AppDispatch, RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { fetchEmployee, fetchEmployeeById, updateEmployee } from "@/store/api/employee";
 import { AddFormEmployee, ParamsEdit, validation } from "@/utilities";
 import { SubmitHandler, useForm } from "react-hook-form";

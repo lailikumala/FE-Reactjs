@@ -9,7 +9,7 @@ interface Params {
 export const Alert = {
   successAlert : (params: Params) => {
     return toast.success(params.text, {
-      position: "top-right",
+      position: "bottom-right",
       autoClose: params.delay || 5000
     })
   },
