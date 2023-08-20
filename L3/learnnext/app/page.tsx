@@ -2,25 +2,22 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import LoginPage from "./(auth)/login/page"
-import HomeLayout from "./(home)/layout"
-import EmployeePage from "./(home)/employee/page"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+
 
 const DefaultPage = () => {
   const router = useRouter()
-      const isLoggedIn = false
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   
-//   useEffect(() => {
-//     if(isLoggedIn) {
-//       router.push("/employee")
-//     } else {
-//       router.push("/login")
-//     }
-//   })
-// }
-return (
-  isLoggedIn ? (<LoginPage/>) : (<EmployeePage/>)
-)
+  useEffect(() => {
+    if(token) {
+      router.push("/employee")
+    } else {
+      router.push("/login")
+    }
+  })
 }
 
 export default DefaultPage

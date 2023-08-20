@@ -1,11 +1,10 @@
-import { token } from "@/utilities";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 export const fetchTraining = createAsyncThunk(
   "training/getList",
-  async () => {
+  async ({token} : {token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/training/list?page=0&size=10`, {
@@ -19,13 +18,14 @@ export const fetchTraining = createAsyncThunk(
       return data;
     } catch(error: any) {
       console.log(error.response.data)
+      throw rejectWithValue(error.response.data)
     }
   }
 );
 
 export const fetchTrainingById = createAsyncThunk(
   "training/getById",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(
@@ -47,7 +47,7 @@ export const fetchTrainingById = createAsyncThunk(
 
 export const updateTraining = createAsyncThunk(
   "training/update",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/training/update`, {
@@ -69,7 +69,7 @@ export const updateTraining = createAsyncThunk(
 
 export const addTraining = createAsyncThunk(
   "training/add",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/training/save`, {
@@ -91,7 +91,7 @@ export const addTraining = createAsyncThunk(
 
 export const deleteTraining = createAsyncThunk(
   "training/delete",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(

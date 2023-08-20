@@ -10,22 +10,18 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 const ModalEdit = ({ id, isShowModal, closeModal }: ParamsEdit) => {
-  const { dataClassId } = useSelector(
-    (state: RootState) => state.classTraining
-  );
-  const { dataTraining } = useSelector(
-    (state: RootState) => state.training
-  );
-  const { dataEmployee } = useSelector(
-    (state: RootState) => state.employee
-  );
+  const { dataClassId } = useSelector((state: RootState) => state.classTraining);
+  const { dataTraining } = useSelector((state: RootState) => state.training);
+  const { dataEmployee } = useSelector((state: RootState) => state.employee);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<AddFormClass>();
 
   useEffect(() => {
-    dispatch(fetchEmployee())
-    dispatch(fetchTraining())
-  }, [])
+    dispatch(fetchEmployee({token: token}))
+    dispatch(fetchTraining({token: token}))
+  }, [token])
 
   useEffect(() => {
     if (dataClassId) {
@@ -48,9 +44,9 @@ const ModalEdit = ({ id, isShowModal, closeModal }: ParamsEdit) => {
       training_date: data.training_date.concat(" ", data.training_time + ":00")
     }
 
-    await dispatch(updateClass({ field: dataClass }))
-    await dispatch(fetchClassById({ id: id }))
-    await dispatch(fetchClass())
+    await dispatch(updateClass({ field: dataClass, token: token }))
+    await dispatch(fetchClassById({ id: id, token: token }))
+    await dispatch(fetchClass({token: token}))
     closeModal()
   };
 

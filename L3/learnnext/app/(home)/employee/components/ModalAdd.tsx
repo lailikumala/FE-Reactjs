@@ -1,6 +1,6 @@
 'use client'
-import { AppDispatch } from "@/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchEmployee, addEmployee } from "@/store/api/employee";
 import { AddFormEmployee, ParamsAdd, validation } from "@/utilities";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -9,6 +9,8 @@ const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<AddFormEmployee>();
   const dispatch = useDispatch<AppDispatch>();
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
 
   const formSubmit: SubmitHandler<AddFormEmployee> = async (data) => {
     const dataEmployee = {
@@ -21,8 +23,8 @@ const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
         npwp: data.npwp,
       }
     }
-    await dispatch(addEmployee({ field: dataEmployee }))
-    await dispatch(fetchEmployee())
+    await dispatch(addEmployee({ field: dataEmployee, token: token }))
+    await dispatch(fetchEmployee({token: token}))
     await reset()
     closeModal()
   };

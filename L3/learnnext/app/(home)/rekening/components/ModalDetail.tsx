@@ -13,19 +13,18 @@ type ParamsDetail = {
 
 const ModalDetail = ({id, isShowModal, closeModal} : ParamsDetail) => {
 
-  const { dataRekeningId } = useSelector(
-    (state: RootState) => state.rekening
-  );
-
+  const { dataRekeningId } = useSelector((state: RootState) => state.rekening);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
 
     if(id) {
-      dispatch(fetchRekeningById({id: id}));
+      dispatch(fetchRekeningById({id: id, token: token}));
     }
     
-  }, [id]);
+  }, [id, token]);
   
   return (
     <section className={isShowModal ? "relative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">

@@ -1,8 +1,8 @@
 'use client'
 import { CgDanger } from "react-icons/cg"
-import { AppDispatch } from "@/store"
+import { AppDispatch, RootState } from "@/store"
 import { deleteTraining, fetchTraining } from "@/store/api/training"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 type ParamsDelete = {
   idTraining: string;
@@ -14,10 +14,12 @@ type ParamsDelete = {
 const ModalDelete = ({idTraining, trainingName, isShowModal, closeModal} : ParamsDelete) => {
 
   const dispatch = useDispatch<AppDispatch>();
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
 
   const deleteData = async () => {
-    await dispatch(deleteTraining({id: idTraining}))
-    await dispatch(fetchTraining())
+    await dispatch(deleteTraining({id: idTraining, token: token}))
+    await dispatch(fetchTraining({token: token}))
     closeModal()
   }
 

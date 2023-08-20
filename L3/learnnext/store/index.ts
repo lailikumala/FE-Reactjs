@@ -1,34 +1,49 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import employeeReducer from "./employeeSlice";
 import trainingReducer from "./trainingSlice";
 import classReducer from './classSlice';
 import rekeningReducer from './rekeningSlice';
 import authReducer from './authSlice';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-export function makeStore() {
-  return configureStore({
-    reducer: {
-      auth: authReducer,
-      employee: employeeReducer,
-      training: trainingReducer,
-      classTraining: classReducer,
-      rekening: rekeningReducer
-    },
-    middleware: (getDefaultMiddleware) =>
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  employee: employeeReducer,
+  training: trainingReducer,
+  classTraining: classReducer,
+  rekening: rekeningReducer
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
-        ignoredActions: ['your/action/type'],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
-        // Ignore these paths in the state
-        ignoredPaths: ['items.dates'],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-  });
-}
-
-export const store = makeStore();
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export default () => {
+  let persistor = persistStore(store);
+  return { store, persistor };
+};

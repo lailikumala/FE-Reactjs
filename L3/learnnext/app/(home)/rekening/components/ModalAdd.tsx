@@ -22,14 +22,14 @@ const bank = [
 ]
 
 const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
-  const { dataEmployee } = useSelector(
-    (state: RootState) => state.employee
-  );
+  const { dataEmployee } = useSelector((state: RootState) => state.employee);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const { register, handleSubmit, reset, formState: { errors } } = useForm<AddFormRekening>();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchEmployee())
+    dispatch(fetchEmployee({token: token}))
   }, [])
 
   const formSubmit: SubmitHandler<AddFormRekening> = async (data) => {
@@ -43,8 +43,8 @@ const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
         id: parseData.id
       }
     }
-    await dispatch(addRekening({ field: dataRekening }))
-    await dispatch(fetchRekening())
+    await dispatch(addRekening({ field: dataRekening, token: token }))
+    await dispatch(fetchRekening({token: token}))
     await reset()
     closeModal()
   }

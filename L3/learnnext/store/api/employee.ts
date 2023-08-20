@@ -1,11 +1,10 @@
-import { token } from "@/utilities";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 export const fetchEmployee = createAsyncThunk(
   "employee/getList",
-  async () => {
+  async ({token} : {token: string}, {rejectWithValue}) => {
     try {
       const response = await fetch(
         `${BASE_URL}/v1/karyawan/list?page=0&size=10`, {
@@ -25,7 +24,7 @@ export const fetchEmployee = createAsyncThunk(
 
 export const fetchEmployeeById = createAsyncThunk(
   "employee/getById",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await fetch(
@@ -47,7 +46,7 @@ export const fetchEmployeeById = createAsyncThunk(
 
 export const updateEmployee = createAsyncThunk(
   "employee/update",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/karyawan/update`, {
@@ -69,7 +68,7 @@ export const updateEmployee = createAsyncThunk(
 
 export const addEmployee = createAsyncThunk(
   "employee/add",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/karyawan/save`, {
@@ -91,7 +90,7 @@ export const addEmployee = createAsyncThunk(
 
 export const deleteEmployee = createAsyncThunk(
   "employee/delete",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(

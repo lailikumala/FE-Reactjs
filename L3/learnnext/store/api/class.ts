@@ -1,11 +1,10 @@
-import { token } from "@/utilities";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 export const fetchClass = createAsyncThunk(
   "class/getList",
-  async () => {
+  async ({token} : {token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/karyawan-training/list?page=1&size=3`, {
@@ -19,13 +18,14 @@ export const fetchClass = createAsyncThunk(
       return data;
     } catch(error: any) {
       console.log(error.response.data)
+      throw rejectWithValue(error.response.data)
     }
   }
 );
 
 export const fetchClassById = createAsyncThunk(
   "class/getById",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(
@@ -47,7 +47,7 @@ export const fetchClassById = createAsyncThunk(
 
 export const updateClass = createAsyncThunk(
   "class/update",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/karyawan-training/update`, {
@@ -69,7 +69,7 @@ export const updateClass = createAsyncThunk(
 
 export const addClass = createAsyncThunk(
   "class/add",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/karyawan-training/save`, {
@@ -83,7 +83,7 @@ export const addClass = createAsyncThunk(
       const data = await response.data
       return data;
     } catch(error: any) {
-      // console.log(error.response)
+      console.log(error.response?.data)
       throw rejectWithValue(error.response.data)
     }
   }
@@ -91,7 +91,7 @@ export const addClass = createAsyncThunk(
 
 export const deleteClass = createAsyncThunk(
   "class/delete",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(

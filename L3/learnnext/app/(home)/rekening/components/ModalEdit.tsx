@@ -16,10 +16,9 @@ const bank = [
 ]
 
 const ModalEdit = ({ id, isShowModal, closeModal }: ParamsEdit) => {
-  const { dataRekeningId } = useSelector(
-    (state: RootState) => state.rekening
-  );
-  
+  const { dataRekeningId } = useSelector((state: RootState) => state.rekening);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<FormRekening>();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -42,9 +41,9 @@ const ModalEdit = ({ id, isShowModal, closeModal }: ParamsEdit) => {
       }
     }
 
-    await dispatch(updateRekening({ field: dataRekening }))
-    await dispatch(fetchRekeningById({ id: id }))
-    await dispatch(fetchRekening())
+    await dispatch(updateRekening({ field: dataRekening, token: token }))
+    await dispatch(fetchRekeningById({ id: id, token: token }))
+    await dispatch(fetchRekening({token: token}))
     closeModal()
   };
 

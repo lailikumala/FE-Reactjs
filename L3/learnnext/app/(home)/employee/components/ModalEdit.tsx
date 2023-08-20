@@ -8,9 +8,9 @@ import { AddFormEmployee, ParamsEdit, validation } from "@/utilities";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const ModalEdit = ({ id, isShowModal, closeModal }: ParamsEdit) => {
-  const { dataEmployeeId } = useSelector(
-    (state: RootState) => state.employee
-  );
+  const { dataEmployeeId } = useSelector((state: RootState) => state.employee);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<AddFormEmployee>();
 
@@ -37,9 +37,9 @@ const ModalEdit = ({ id, isShowModal, closeModal }: ParamsEdit) => {
         npwp: data.npwp
       }
     }
-    await dispatch(updateEmployee({ field: dataEMployee }))
-    await dispatch(fetchEmployeeById({ id: id }))
-    await dispatch(fetchEmployee())
+    await dispatch(updateEmployee({ field: dataEMployee, token: token }))
+    await dispatch(fetchEmployeeById({ id: id, token: token }))
+    await dispatch(fetchEmployee({token: token}))
     closeModal()
   };
 

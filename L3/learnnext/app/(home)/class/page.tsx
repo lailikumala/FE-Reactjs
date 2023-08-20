@@ -14,18 +14,17 @@ const ClassPage = () => {
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [showModalDelete, setShowModalDelete] = useState(false)
   const [selected, setselected] = useState<any>()
-  const { dataClass } = useSelector(
-    (state: RootState) => state.classTraining
-  );
-
+  const { dataClass } = useSelector((state: RootState) => state.classTraining);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const data = dispatch(fetchClass());
+    const data = dispatch(fetchClass({token: token}));
     return () => {
       data
     };
-  }, []);
+  }, [token]);
 
   return (
     <section className="text-black">

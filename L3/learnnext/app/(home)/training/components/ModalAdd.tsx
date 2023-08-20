@@ -1,7 +1,7 @@
 'use client'
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AppDispatch } from "@/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
 import { addTraining, fetchTraining } from "@/store/api/training";
 import { AddFormTraining, ParamsAdd, validation } from "@/utilities";
 
@@ -9,14 +9,16 @@ const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<AddFormTraining>();
   const dispatch = useDispatch<AppDispatch>();
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
 
   const formSubmit: SubmitHandler<AddFormTraining> = async (data) => {
     const dataTraining =  {
       tema: data.tema,
       pengajar: data.pengajar
     }
-    await dispatch(addTraining({field: dataTraining}))
-    await dispatch(fetchTraining())
+    await dispatch(addTraining({field: dataTraining, token: token}))
+    await dispatch(fetchTraining({token: token}))
     await reset()
     closeModal()
   };

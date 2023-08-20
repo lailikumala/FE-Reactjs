@@ -10,19 +10,17 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
-  const { dataTraining } = useSelector(
-    (state: RootState) => state.training
-  );
-  const { dataEmployee } = useSelector(
-    (state: RootState) => state.employee
-  );
+  const { dataTraining } = useSelector((state: RootState) => state.training);
+  const { dataEmployee } = useSelector((state: RootState) => state.employee);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const { register, handleSubmit, reset, formState: { errors } } = useForm<AddFormClass>();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchEmployee())
-    dispatch(fetchTraining())
-  }, [])
+    dispatch(fetchEmployee({token: token}))
+    dispatch(fetchTraining({token: token}))
+  }, [token])
 
   const formSubmit: SubmitHandler<AddFormClass> = async (data) => {
     const dataClass = {
@@ -34,8 +32,8 @@ const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
       },
       training_date: data.training_date.concat(" ", data.training_time + ":00")
     }
-    await dispatch(addClass({ field: dataClass }))
-    await dispatch(fetchClass())
+    await dispatch(addClass({ field: dataClass, token: token }))
+    await dispatch(fetchClass({token: token}))
     await reset()
     closeModal()
   }
@@ -53,7 +51,7 @@ const ModalAdd = ({ isShowModal, closeModal }: ParamsAdd) => {
                 <select className="w-full bg-white select select-bordered" {...register("karyawan", validation.addClass.karyawan)}>
                   <option value={""}>Pilih Pegawai:</option>
                   {dataEmployee?.content?.map((value: any, index: number) => (
-                    <option key={index} value={value}>{value?.name}</option>
+                    <option key={index} value={value?.id}>{value?.name}</option>
                   ))}
                 </select>
                 {errors.karyawan && <p className="text-sm text-red-500">{errors.karyawan?.message}</p>}

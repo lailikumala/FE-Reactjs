@@ -7,9 +7,9 @@ import { AddFormTraining, ParamsEdit, validation } from "@/utilities"
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const ModalEdit = ({id, isShowModal, closeModal} : ParamsEdit) => {
-  const { dataTrainingId } = useSelector(
-    (state: RootState) => state.training
-  );
+  const { dataTrainingId } = useSelector((state: RootState) => state.training);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, setValue,  formState: { errors } } = useForm<AddFormTraining>();
 
@@ -26,9 +26,9 @@ const ModalEdit = ({id, isShowModal, closeModal} : ParamsEdit) => {
       tema: data.tema,
       pengajar: data.pengajar
     }
-    await dispatch(updateTraining({field: dataTraining}))
-    await dispatch(fetchTrainingById({id: id}))
-    await dispatch(fetchTraining())
+    await dispatch(updateTraining({field: dataTraining, token: token}))
+    await dispatch(fetchTrainingById({id: id, token: token}))
+    await dispatch(fetchTraining({token: token}))
     closeModal()
   };
 

@@ -15,18 +15,17 @@ const TrainingPage = () => {
   const [showModalAdd, setShowModalAdd] = useState(false)
   const [showModalDelete, setShowModalDelete] = useState(false)
   const [selected, setselected] = useState<any>()
-  const { dataTraining } = useSelector(
-    (state: RootState) => state.training
-  );
-
+  const { dataTraining } = useSelector((state: RootState) => state.training);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const data = dispatch(fetchTraining());
+    const data = dispatch(fetchTraining({token: token}));
     return () => {
       data
     };
-  }, []);
+  }, [token]);
 
   return (
     <section className="text-black">

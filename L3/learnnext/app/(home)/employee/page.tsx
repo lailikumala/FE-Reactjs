@@ -14,18 +14,18 @@ const EmployeePage = () => {
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [showModalDelete, setShowModalDelete] = useState(false)
   const [selected, setselected] = useState<any>()
-  const { dataEmployee } = useSelector(
-    (state: RootState) => state.employee
-  );
+  const { dataEmployee } = useSelector((state: RootState) => state.employee);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const data =  dispatch(fetchEmployee());
+    const data =  dispatch(fetchEmployee({token: token}));
     return () => {
       data
     };
-  }, []);
+  }, [token]);
 
   return (
     <section className="text-black">

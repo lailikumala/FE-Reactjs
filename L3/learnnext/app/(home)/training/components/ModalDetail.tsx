@@ -13,17 +13,17 @@ type ParamsDetail = {
 
 const ModalDetail = ({ idTraining, isShowModal, closeModal } : ParamsDetail ) => {
 
-  const { dataTrainingId } = useSelector(
-    (state: RootState) => state.training
-  );
+  const { dataTrainingId } = useSelector((state: RootState) => state.training);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if(idTraining) {
-      dispatch(fetchTrainingById({id: idTraining}));
+      dispatch(fetchTrainingById({id: idTraining, token: token}));
     }
     
-  }, [idTraining]);
+  }, [idTraining, token]);
 
   return (
     <section className={isShowModal ? "ralative z-10 bg-slate-700" : "hidden"} aria-labelledby="modal-title" role="dialog" aria-modal="true">

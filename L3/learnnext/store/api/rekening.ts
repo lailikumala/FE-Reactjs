@@ -1,11 +1,10 @@
-import { token } from "@/utilities";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 export const fetchRekening = createAsyncThunk(
   "rekening/getList",
-  async () => {
+  async ({token} : {token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/rekening/list?page=1&size=3`, {
@@ -18,14 +17,15 @@ export const fetchRekening = createAsyncThunk(
       const data = await response.data;
       return data;
     } catch(error: any) {
-      console.log(error.response.data)
+      // console.log(error.response.data)
+      throw rejectWithValue(error.response.data)
     }
   }
 );
 
 export const fetchRekeningById = createAsyncThunk(
   "rekening/getById",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(
@@ -47,7 +47,7 @@ export const fetchRekeningById = createAsyncThunk(
 
 export const updateRekening = createAsyncThunk(
   "rekening/update",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/rekening/update`, {
@@ -69,7 +69,7 @@ export const updateRekening = createAsyncThunk(
 
 export const addRekening = createAsyncThunk(
   "rekening/add",
-  async ({field} : {field: any}, {rejectWithValue}) => {
+  async ({field, token} : {field: any, token: string}, {rejectWithValue}) => {
     try {
       const response = await axios(
         `${BASE_URL}/v1/rekening/save`, {
@@ -91,7 +91,7 @@ export const addRekening = createAsyncThunk(
 
 export const deleteRekening = createAsyncThunk(
   "rekening/delete",
-  async ({id} : {id: any}, {rejectWithValue}) => {
+  async ({id, token} : {id: any, token: string}, {rejectWithValue}) => {
     try {
       if(id) {
         const response = await axios(

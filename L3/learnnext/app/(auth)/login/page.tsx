@@ -1,14 +1,15 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { ButtinPrimary } from '../../components/Button';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { AppDispatch } from '@/store';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { userLogin } from '@/store/api/auth';
+import { Alert } from '@/app/components/Alert';
 
 type TLogin = {
   email: string;
@@ -18,13 +19,22 @@ type TLogin = {
 const LoginPage = () => {
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>();
-
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<TLogin>();
-
+  const { register, handleSubmit, formState: { errors } } = useForm<TLogin>();
+  const { postLogin } = useSelector(
+    (state: RootState) => state.auth
+  );
+  
   const formSubmit: SubmitHandler<TLogin> = (data) => {
     dispatch(userLogin({field: {email: data.email, password: data.password}}))
   }
 
+  useEffect(() => {
+    if(postLogin?.status === '200') {
+      router.push("/employee")
+    } else {
+      Alert.errorAlert({text: postLogin?.message})
+    }
+  },[postLogin])
   return (
     <>
       <div className="block mb-8 text-2xl font-semibold text-center text-white">

@@ -1,8 +1,8 @@
 'use client'
-import { AppDispatch } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { deleteRekening, fetchRekening } from "@/store/api/rekening";
 import { CgDanger } from "react-icons/cg"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 type ParamsDelete = {
   id: String,
@@ -13,10 +13,12 @@ type ParamsDelete = {
 
 const ModalDelete = ({isShowModal, id, holderBank, closeModal} : ParamsDelete) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
 
   const deleteData = async () => {
-    await dispatch(deleteRekening({id: id}))
-    await dispatch(fetchRekening())
+    await dispatch(deleteRekening({id: id, token: token}))
+    await dispatch(fetchRekening({token: token}))
     closeModal()
   }
   

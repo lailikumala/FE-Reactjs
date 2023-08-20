@@ -5,13 +5,18 @@ import { usePathname, useRouter } from 'next/navigation';
 import React from 'react'
 import { MdLogout } from 'react-icons/md';
 import { HiMenuAlt1 } from 'react-icons/hi';
+import { AppDispatch } from '@/store';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/store/authSlice';
 
 const Navbar = () => {
   const router = useRouter()
   const pathname = usePathname()
+  const dispatch = useDispatch<AppDispatch>();
 
   const logoutUser = () => {
-    router.push("/login")
+    dispatch(logout())
+    router.push('/login')
   }
 
   return (

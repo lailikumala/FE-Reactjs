@@ -14,18 +14,18 @@ const RekeningPage = () => {
   const [showModalEdit, setShowModalEdit] = useState(false)
   const [showModalDelete, setShowModalDelete] = useState(false)
   const [selected, setselected] = useState<any>()
-  const { dataRekening } = useSelector(
-    (state: RootState) => state.rekening
-  );
+  const { dataRekening } = useSelector((state: RootState) => state.rekening);
+  const { postLogin } = useSelector((state: RootState) => state.auth);
+  const token = postLogin?.data?.access_token
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const data = dispatch(fetchRekening());
+    const data = dispatch(fetchRekening({token: token}));
     return () => {
       data
     };
-  }, []);
+  }, [token]);
 
   return (
     <section className="text-black">
