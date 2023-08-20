@@ -1,12 +1,11 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import { ToastContainer } from 'react-toastify';
 import { ButtinPrimary } from '../../components/Button';
-import { Alert } from '../../components/Alert';
 import { useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { userForgot } from '@/store/api/auth';
 
@@ -18,25 +17,14 @@ const ForgotPasswordPage = () => {
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, formState: { errors } } = useForm<TForgot>();
-  const { postForgot } = useSelector(
-    (state: RootState) => state.auth
-  );
-  const [email, setEmail] = useState('')
-  const formSubmit: SubmitHandler<TForgot> = (data) => {
-    setEmail(data.email)
-    dispatch(userForgot({field: {
+  
+  const formSubmit: SubmitHandler<TForgot> = async (data) => {
+    await dispatch(userForgot({field: {
       email: data.email, 
-    }
-  }))
+      }
+    }))
+    router.push(`/confirmpassword?email=${data.email}`)
   }
-
-  useEffect(() => {
-    if(postForgot?.status === '200') {
-      router.push(`/confirmpassword?email=${email}`)
-    } else {
-      Alert.errorAlert({text: postForgot?.message})
-    }
-  },[postForgot])
 
   return (
     <>

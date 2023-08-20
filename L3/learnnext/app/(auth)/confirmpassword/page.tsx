@@ -1,9 +1,8 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ToastContainer } from 'react-toastify';
 import { ButtinPrimary } from '../../components/Button';
-import { Alert } from '../../components/Alert';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
@@ -21,13 +20,13 @@ const ConfirmPasswordPage = () => {
   const email = searchParams.get('email');
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, formState: { errors } } = useForm<TConfirmPassword>();
-  const { postConfirmPassword, postForgot } = useSelector(
+  const { postForgot } = useSelector(
     (state: RootState) => state.auth
   );
   const OTP = postForgot?.data.replace(/[^-.0-9]/g,'')
 
-  const formSubmit: SubmitHandler<TConfirmPassword> = (data) => {
-    dispatch(userConfirmPassword({
+  const formSubmit: SubmitHandler<TConfirmPassword> = async (data) => {
+  await dispatch(userConfirmPassword({
       field: {
         email: email,
         newPassword: data.newPassword,
@@ -35,16 +34,8 @@ const ConfirmPasswordPage = () => {
         otp: OTP
       }
     }))
+    router.push('/login')
   }
-
-  useEffect(() => {
-    if (postConfirmPassword?.status === '200') {
-      Alert.successAlert({ text: postConfirmPassword?.data })
-      router.push("/login")
-    } else {
-      Alert.errorAlert({ text: postConfirmPassword?.message })
-    }
-  }, [postConfirmPassword])
 
   return (
     <>
